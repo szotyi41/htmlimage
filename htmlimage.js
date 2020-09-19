@@ -42,7 +42,7 @@ process.argv.forEach(function (val, index) {
         });
 
         // Take screenshot after delay
-        await sleep(parameters.delay);
+        await sleep(parseInt(parameters.delay));
 
         // Promise for timeout
         const timeoutPromise = new Promise(async (resolve, reject) => {
@@ -51,7 +51,7 @@ process.argv.forEach(function (val, index) {
                 // Send reject
                 reject('Html to image generating timed out' + '\n');
 
-            }, parameters.timeoutInSeconds * 1000);
+            }, parseInt(parameters.timeoutInSeconds) * 1000);
         });
 
         // Promise for screenshot
@@ -60,8 +60,8 @@ process.argv.forEach(function (val, index) {
             await page.screenshot({
                 path: parameters.output,
                 type: parameters.type,
-                quality: parameters.quality,
-                fullPage: parameters.fullPage
+                quality: parseInt(parameters.quality),
+                fullPage: parameters.fullPage.toString() === 'true' ? true : false 
             });
 
             // Send resolve
