@@ -57,7 +57,7 @@ process.argv.forEach(function (val, index) {
         // Promise for screenshot
         const screenshotPromise = new Promise(async (resolve, reject) => {
 
-            await page.screenshot({
+            const screenshot = await page.screenshot({
                 path: parameters.output,
                 type: parameters.type,
                 quality: parseInt(parameters.quality),
@@ -70,7 +70,10 @@ process.argv.forEach(function (val, index) {
         });
 
         // Race with screenshot vs timeout
-        await Promise.race([screenshotPromise, timeoutPromise]).then(async () => {
+        const promises = Promise.race([screenshotPromise, timeoutPromise]);
+
+        // Successfully finished
+        promises.then(async () => {
 
             process.stdout.write('Html to image generated successfully to: ' + parameters.output + '\n');
 
@@ -81,7 +84,10 @@ process.argv.forEach(function (val, index) {
 
             await process.kill(process.pid);
 
-        }).catch(async (error) => {
+        })
+
+        // Catch errors
+        promises.catch(async (error) => {
 
             process.stdout.write('Failed to generate image from html: ' + error + '\n');
 
