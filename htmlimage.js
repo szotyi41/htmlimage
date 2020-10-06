@@ -59,16 +59,16 @@ process.argv.forEach(function (val, index) {
 
             let screenshotAttributes = {
                 path: parameters.output,
-                type: parameters.type,
+                type: parameters.type === 'jpg' ? 'jpeg' : parameters.type,
                 fullPage: parameters.fullPage.toString() === 'true' ? true : false 
             };
 
             // Only jpeg has quality parameter
-            if (parameters.type === 'jpeg') {
+            if (screenshotAttributes.type === 'jpeg') {
                 screenshotAttributes.quality = parseInt(parameters.quality);
             }
 
-            const screenshot = await page.screenshot();
+            const screenshot = await page.screenshot(screenshotAttributes);
 
             // Send resolve
             resolve(screenshot);
