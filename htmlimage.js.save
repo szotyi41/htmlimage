@@ -2,15 +2,15 @@ const puppeteer = require('puppeteer');
 
 const parameters = {
     url: 'https://google.com',
-    output: 'screenshot.png',
+    output: 'screenshot.jpg',
     width: 300,
     height: 250,
-    type: 'png',
+    type: 'jpeg',
     quality: 50,
     delay: 1500,
     fullPage: false,
 
-    // 1 minute to timeout
+    // 2 minutes to timeout
     timeoutInSeconds: 60
 };
 
@@ -57,21 +57,16 @@ process.argv.forEach(function (val, index) {
         // Promise for screenshot
         const screenshotPromise = new Promise(async (resolve, reject) => {
 
-            let screenshotAttributes = {
+            const screenshot = await page.screenshot({
                 path: parameters.output,
                 type: parameters.type,
-                fullPage: parameters.fullPage.toString() === 'true' ? true : false 
-            };
-
-            // Only jpeg has quality parameter
-            if (parameters.type === 'jpeg') {
-                screenshotAttributes.quality = parseInt(parameters.quality);
-            }
-
-            const screenshot = await page.screenshot();
+                quality: parseInt(parameters.quality),
+                fullPage: parameters.fullPage.toString() === 'true' ? true : false
+            });
+		
 
             // Send resolve
-            resolve(screenshot);
+            resolve();
 
         });
 
