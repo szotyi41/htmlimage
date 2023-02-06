@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/szotyi41/htmlimage-puppeteer#readme",
   "dependencies": {
+    "puppeteer": "^19.6.3"
   },
   "devDependencies": {}
 }
