@@ -9,6 +9,7 @@ const parameters = {
     width: 300,
     height: 250,
     delay: 1500,
+    scaleFactor: 1,
 
     fullPage: false,
 
@@ -138,7 +139,7 @@ async function generate(browser, params) {
         await page.setViewport({
             width: parseInt(params.width),
             height: parseInt(params.height),   
-            deviceScaleFactor: 2
+            deviceScaleFactor: 1//params.scaleFactor
         });
 
         process.stdout.write('Viewport set to ' + params.width + 'x' + params.height + '. Delay started.' + '\n');
