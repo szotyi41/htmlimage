@@ -8,11 +8,11 @@ Or ```node htmlgif.js url=google.com```
 
 # Use json
 
-``` node json='{url: "google.com"}'```
+``` node htmlvideo.js json='{url: "google.com"}'```
 
 # Or generate multiple outputs
 
-``` node json='[{url: "google.com"}]' ```
+``` node htmlgif.js json='[{url: "google.com"}]' ```
 
 # Create gifs from google, facebook and youtube
 ```node htmlgif.js json='[{"url":"https://google.com","output":"google.gif"},{"url":"https://facebook.com","output":"facebook.gif"},{"url":"https://youtube.com","output":"youtube.gif"}]'```
