@@ -10,13 +10,18 @@ Or ```node htmlvideo.js url=google.com width=300 height=250 duration=7000 output
 
 Or ```node htmlgif.js url=google.com```
 
+# Installation
+
+Required stuff:
+* What you need for pupeteer (chrome driver, chrome) read more at https://pptr.dev/
+* Nodejs
+* FFmpeg for gif generation
+
 # Use json
 
 You can add json structure if you want to automatize the code:
 
 ``` node htmlvideo.js json='{url: "google.com"}'```
-
-# Or generate multiple outputs
 
 Or you can set multiple options if you put to array like this:
 
