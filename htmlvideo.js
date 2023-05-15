@@ -1,14 +1,17 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
+const { PuppeteerScreenRecorder } = require('puppeteer-screen-recorder');
+
 
 const parameters = {
     url: 'https:\/\/s3.eu-central-1.amazonaws.com\/wavemaker-storage\/generated\/20\/2209020926_23885\/300x250\/index.html',
     json: '', 
-    output: 'output.png',
+    output: 'video.mp4',
+	duration: 7000,
     width: 300,
     height: 250,
-    delay: 1500,
-    scale: 1,
+    delay: 0,
+    scale: 2,
 
     fullPage: false,
 
@@ -16,6 +19,21 @@ const parameters = {
     timeoutInSeconds: 60
 };
 
+const videoParams = {
+	followNewTab: true,
+	fps: 25,
+	videoFrame: {
+		width: 300,
+		height: 250,
+	},
+	videoCrf: 18,
+	videoCodec: 'libx264',
+	videoPreset: 'ultrafast',
+	videoBitrate: 1000,
+	autopad: {
+		color: 'black' | '#35A5FF',
+	}
+};
 
 
 // Define sleep function
@@ -25,6 +43,7 @@ const sleep = m => new Promise(r => setTimeout(r, m));
 process.argv.forEach(function (val, index) {
     const argument = val.split('=');
     parameters[argument[0]] = argument[1];
+	videoParams[argument[0]] = argument[1];
 });
 
 // Start process here
@@ -37,7 +56,7 @@ process.argv.forEach(function (val, index) {
 
         process.stdout.write('Details coming from json');
 
-        // Has JSON, parse it and run screenshots
+        // Has JSON, parse it and run capture
         await parseJSON(browser, parameters);
 
     } else {
@@ -61,7 +80,7 @@ async function parseJSON(browser, parameters) {
     // Generate from array
     if (Array.isArray(parsedObject)) {
 
-        // Each in json
+        // Each in json array (generate multiple videos)
         for (var i = 0, paramsFromObject; i < parsedObject.length; i++) {
             paramsFromObject = parsedObject[i];
             await generate(browser, { ...parameters, ...paramsFromObject});
@@ -110,66 +129,61 @@ async function launchBrowser() {
 async function generate(browser, params) {
 
     try {
+        // Set puppeteer dimensions
 		params.width = parseInt(params.width);
 		params.height = parseInt(params.height);
 
-        process.stdout.write('Screenshot generating started from: ' + params.url + '\n');
+        // Set video dimensions
+        videoParams.videoFrame.width = params.width * params.scale;
+        videoParams.videoFrame.height = params.height * params.scale;
+
+        process.stdout.write('Video generating started from: ' + params.url + '\n');
 
         const page = await browser.newPage();
+
+        // Set screen width and height
+        await page.setViewport({ width: params.width, height: params.height });
 
         // Go to url
         await page.goto(params.url.replace('\\', '/'));
 
-        // Set screen width and height
-        await page.setViewport({
-            width: params.width,
-            height: params.height,   
-            deviceScaleFactor: params.scale
-        });
-
         process.stdout.write('Viewport set to ' + params.width + 'x' + params.height + ' scale ' + params.scale + '\n');
 
-        // Take screenshot after delay
-        // -------------------
-        // Delay before take the screenshot
+        // Delay before capture the video
         await sleep(parseInt(params.delay));
 
-        process.stdout.write('Delay ended. Now can make screenshot.' + '\n');
-
-        // When its timeout to loading
-        // -------------------
-        // Promise for timeout
+        // Timeout promise
         const timeoutPromise = new Promise(async (resolve, reject) => {
             setTimeout(async () => {
 
                 // Send reject
-                reject('Html to image generating timed out' + '\n');
+                reject('Html to video generating timed out' + '\n');
 
             }, parseInt(params.timeoutInSeconds) * 1000);
         })
 
-        // When its create screenshot
-        // ---------------------
-        // Promise for screenshot
-        const screenshotPromise = new Promise(async (resolve, reject) => {
+        // Record promise
+        const recordPromise = new Promise(async (resolve, reject) => {
 
             try {
+
+                // Remove videofile if already exists
                 if (fs.existsSync(params.output)) {
                     fs.rmSync(params.output);
                 }
 
-                const screenshotAttributes = {
-                    path: params.output,
-                    type: 'png',
-                    fullPage: false
-                };
+				const recorder = new PuppeteerScreenRecorder(page, videoParams);
 
-                process.stdout.write('Starting make the screenshot' + '\n'); 
-                const screenshot = await page.screenshot(screenshotAttributes);
-                process.stdout.write('Screenshot created successfully to: ' + screenshotAttributes.path + '\n');
+				console.log('Start capture');
+				await recorder.start(params.output);
+				await sleep(params.duration);
+				await recorder.stop();
+				console.log('End capture');
+
+                process.stdout.write('Video record created successfully to: ' + params.output + '\n');
 
                 // Send resolve
-                resolve(screenshot);
+                resolve(true);
             } catch(error) {
                 reject(error);
                 throw error;
@@ -177,17 +191,17 @@ async function generate(browser, params) {
 
         });
 
-        // Race with screenshot vs timeout
-        await Promise.race([screenshotPromise, timeoutPromise])
+        // Race with video vs timeout
+       	await Promise.race([recordPromise,  timeoutPromise])
             .then(async () => {
-                process.stdout.write('Html to image generated successfully to: ' + params.output + '\n');
+                process.stdout.write('Html to video generated successfully to: ' + params.output + '\n');
             })
             .catch(async (error) => {
-                process.stdout.write('Failed to generate image from html: ' + error + '\n');
+                process.stdout.write('Failed to generate video from html: ' + error + '\n');
             });
 
     } catch (error) {
-        process.stdout.write('Html to image generating failed with: ' + error + '\n');
+        process.stdout.write('Html to video generating failed with: ' + error + '\n');
         if (typeof page.close === 'function') page.close();
     }
 }

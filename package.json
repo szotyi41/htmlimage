@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/szotyi41/htmlimage-puppeteer#readme",
   "dependencies": {
-    "puppeteer": "^19.6.3"
+    "gifencoder": "^2.0.1",
+    "puppeteer": "^19.6.3",
+    "puppeteer-screen-recorder": "^2.1.2"
   },
   "devDependencies": {}
 }
