@@ -29,6 +29,6 @@ Or you can set multiple options if you put to array like this:
 
 # Create gifs from google, facebook and youtube
 
-Please test with these line, it will generate gifs from google, facebook and youtube:
+Please test with this line, it will generate gifs from google, facebook and youtube:
 
 ```node htmlgif.js json='[{"url":"https://google.com","output":"google.gif"},{"url":"https://facebook.com","output":"facebook.gif"},{"url":"https://youtube.com","output":"youtube.gif"}]'```
