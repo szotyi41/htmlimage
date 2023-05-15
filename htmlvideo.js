@@ -174,11 +174,11 @@ async function generate(browser, params) {
 
 				const recorder = new PuppeteerScreenRecorder(page, videoParams);
 
-				console.log('Start capture');
+				process.stdout.write('Start capture\n');
 				await recorder.start(params.output);
 				await sleep(params.duration);
 				await recorder.stop();
-				console.log('End capture');
+				process.stdout.write('End capture\n');
 
                 process.stdout.write('Video record created successfully to: ' + params.output + '\n');
 

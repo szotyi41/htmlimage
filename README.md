@@ -4,6 +4,8 @@ Call ```node htmlimage.js url=google.com width=300 height=250 output=image.jpg t
 
 Or ```node htmlvideo.js url=google.com width=300 height=250 duration=7000 output=video.mp4 delay=0``` and create video.
 
+Or ```node htmlgif.js url=google.com```
+
 # Use json
 
 ``` node json='{url: "google.com"}'```
