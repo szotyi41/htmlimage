@@ -12,7 +12,7 @@ const parameters = {
     width: 300,
     height: 250,
     delay: 0,
-    scale: 2,
+    scale: 1,
 
     fullPage: false,
 
