@@ -138,6 +138,8 @@ async function generate(browser, params) {
         videoParams.videoFrame.width = params.width * params.scale;
         videoParams.videoFrame.height = params.height * params.scale;
 
+        const { width, height } = params;
+
         process.stdout.write('Video generating started from: ' + params.url + '\n');
 
         const page = await browser.newPage();
@@ -186,7 +188,7 @@ async function generate(browser, params) {
 				// Create gif from mp4
 				ffmpeg(params.output + '.mp4')
 					.output(params.output)
-					.outputOption('-vf', 'fps=' + videoParams.fps + ',scale=640:-1:flags=lanczos')
+					.outputOption('-vf', `fps=${videoParams.fps},scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`)
 					.outputOption('-pix_fmt', 'rgb24')
 					.outputOption('-r', videoParams.fps)
 					.outputOption('-f', 'gif')
