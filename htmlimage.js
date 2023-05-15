@@ -129,15 +129,12 @@ async function generate(browser, params) {
 
         process.stdout.write('Viewport set to ' + params.width + 'x' + params.height + ' scale ' + params.scale + '\n');
 
-        // Take screenshot after delay
-        // -------------------
         // Delay before take the screenshot
         await sleep(parseInt(params.delay));
 
         process.stdout.write('Delay ended. Now can make screenshot.' + '\n');
 
-        // When its timeout to loading
-        // -------------------
+
         // Promise for timeout
         const timeoutPromise = new Promise(async (resolve, reject) => {
             setTimeout(async () => {
@@ -148,8 +145,7 @@ async function generate(browser, params) {
             }, parseInt(params.timeoutInSeconds) * 1000);
         })
 
-        // When its create screenshot
-        // ---------------------
+
         // Promise for screenshot
         const screenshotPromise = new Promise(async (resolve, reject) => {
 
