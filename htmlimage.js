@@ -35,7 +35,7 @@ process.argv.forEach(function (val, index) {
 
     if (parameters.json && parameters.json.length > 10) {
 
-        process.stdout.write('Details coming from json');
+        process.stdout.write('Details coming from json\n');
 
         // Has JSON, parse it and run screenshots
         await parseJSON(browser, parameters);

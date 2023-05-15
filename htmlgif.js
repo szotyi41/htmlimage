@@ -55,7 +55,7 @@ process.argv.forEach(function (val, index) {
 
     if (parameters.json && parameters.json.length > 10) {
 
-        process.stdout.write('Details coming from json');
+        process.stdout.write('Details coming from json\n');
 
         // Has JSON, parse it and run capture
         await parseJSON(browser, parameters);
@@ -229,7 +229,7 @@ async function generate(browser, params) {
 
     } catch (error) {
         process.stdout.write('Html to video generating failed with: ' + error + '\n');
-        if (typeof page.close === 'function') page.close();
+        //if (typeof page.close === 'function') page.close();
     }
 }
 
